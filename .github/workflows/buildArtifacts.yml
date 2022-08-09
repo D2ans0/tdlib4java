@@ -34,7 +34,7 @@ jobs:
         vcpkgDirectory: C:/vcpkg
 
     - name: Install dependencies from vcpkg
-      run: "C:/vcpkg/vcpkg.exe install ${{ vcpkg_packages }}"
+      run: "C:/vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }}"
 
     - run: find
       shell: bash
