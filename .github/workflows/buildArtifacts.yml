@@ -1,0 +1,98 @@
+
+name: tdlib Main
+on:
+  workflow_dispatch:
+
+env:
+  vcpkg_packages: "gperf:x64-windows openssl:x64-windows zlib:x64-windows readline:x64-windows"
+  java_ver: "8"
+  php_ver: "7.4"
+  cmake_ver: "3.16.x"
+
+jobs:
+  build:
+    runs-on: Windows-latest
+    steps:
+    - uses: actions/checkout@v3
+
+
+    - name: Setup Visual Studio
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Test MSbuild
+      run: msbuild -version
+
+
+    - name: Setup vcpkg and install dependencies
+      uses: lukka/run-vcpkg@v10
+      id: runvcpkg
+      with:
+        # This one is not needed, as it is the default value anyway.
+        # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgJsonGlob: '**/cmakepresets/vcpkg.json'
+        runVcpkgInstall: true
+        runVcpkgFormatString: ${{ env.vcpkg_packages }}
+
+
+    - uses: lukka/get-cmake@latest
+    - name: dir
+
+      run: find $RUNNER_WORKSPACE
+      shell: bash
+
+
+    - name: Setup Java 8
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.java_ver }}
+
+    - name: Test Java
+      run: "java -version"
+
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.php_ver }}
+        # tools: pecl
+        # extensions: swoole
+
+    - name: Test PHP
+      run: "php -v"
+
+
+    - uses: jwlawson/actions-setup-cmake@v1.12
+      with:
+        cmake-version: ${{ env.cmake_ver }}
+
+    - name: Test Cmake
+      run: cmake --version
+
+
+    - name: Compile td with JNI support
+      run: |
+        Remove-Item td/build -Force -Recurse -ErrorAction SilentlyContinue
+        mkdir td/build
+        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=./td/example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=./td/vcpkg/scripts/buildsystems/vcpkg.cmake ./td
+        cmake --build ./td/build --target install --config Release
+
+    - name: Compile Java ver
+      run: |
+        Remove-Item td/example/java/build -Force -Recurse -ErrorAction SilentlyContinue
+        mkdir td/example/java/build
+        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=td/tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=td/vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path td/example/java/td/lib/cmake/Td) td/example/java
+        cmake --build td/example/java/build --target install --config Release
+        dir td/tdlib
+
+    - name: Archive main td artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: ./td/build
+
+    - name: Archive java artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage-report
+        path: ./td/example/java/build
