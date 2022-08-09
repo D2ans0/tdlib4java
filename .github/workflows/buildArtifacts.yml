@@ -9,7 +9,7 @@ env:
   php_ver: "7.4"
   cmake_ver: "3.16.x"
   VCPKG_DEFAULT_TRIPLET: "x64"
-  vcpkg_packages: '"openssl:x64-windows", "zlib:x64-windows", "gperf:x64-windows", "readline:x64-windows"'
+  vcpkg_packages: "openssl:x64-windows zlib:x64-windows gperf:x64-windows readline:x64-windows"
 
 
 jobs:
