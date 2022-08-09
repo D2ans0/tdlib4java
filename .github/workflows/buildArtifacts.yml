@@ -63,27 +63,27 @@ jobs:
 
     - name: Compile td with JNI support
       run: |
-        Remove-Item td/build -Force -Recurse -ErrorAction SilentlyContinue
-        mkdir td/build
-        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=./td/example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=./td/vcpkg/scripts/buildsystems/vcpkg.cmake ./td
-        cmake --build ./td/build --target install --config Release
+        Remove-Item build -Force -Recurse -ErrorAction SilentlyContinue
+        mkdir build
+        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=./example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=./vcpkg/scripts/buildsystems/vcpkg.cmake .
+        cmake --build ./build --target install --config Release
 
     - name: Compile Java ver
       run: |
-        Remove-Item td/example/java/build -Force -Recurse -ErrorAction SilentlyContinue
-        mkdir td/example/java/build
-        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=td/tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=td/vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path td/example/java/td/lib/cmake/Td) td/example/java
-        cmake --build td/example/java/build --target install --config Release
-        dir td/tdlib
+        Remove-Item ./example/java/build -Force -Recurse -ErrorAction SilentlyContinue
+        mkdir ./example/java/build
+        cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=./vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path ./example/java/td/lib/cmake/Td) ./example/java
+        cmake --build ./example/java/build --target install --config Release
+        dir ./tdlib
 
     - name: Archive main td artifact
       uses: actions/upload-artifact@v3
       with:
         name: code-coverage-report
-        path: ./td/build
+        path: ./build
 
     - name: Archive java artifact
       uses: actions/upload-artifact@v3
       with:
         name: code-coverage-report
-        path: ./td/example/java/build
+        path: ./example/java/build
