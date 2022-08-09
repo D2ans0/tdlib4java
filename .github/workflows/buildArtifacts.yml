@@ -12,22 +12,22 @@ env:
     {
       {
       "name": "gperf",
-      "version-string": "3.1"
+      "version-string": "3.1",
       "platform": "windows"
-      }
+      },
       {
       "name": "openssl",
-      "version-string": "3.0"
+      "version-string": "3.0",
       "platform": "windows"
-      }
+      },
       {
       "name": "zlib",
-      "version-string": "1.2.3"
+      "version-string": "1.2.3",
       "platform": "windows"
-      }
+      },
       {
       "name": "readline",
-      "version-string": "5.0"
+      "version-string": "5.0",
       "platform": "windows"
       }
     }
@@ -38,8 +38,6 @@ jobs:
     runs-on: Windows-latest
     steps:
     - uses: actions/checkout@v3
-      with:
-        submodules: true
 
 
     - uses: microsoft/setup-msbuild@v1.1
@@ -57,12 +55,12 @@ jobs:
       uses: lukka/run-vcpkg@v10
       id: runvcpkg
       with:
-        # This one is not needed, as it is the default value anyway.
-        # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
+        runVcpkgInstall: true
         vcpkgJsonGlob: './vcpkg.json'
         appendedCacheKey: vcpkginstall
-        # vcpkgDirectory: '${{ github.workspace }}/td/vcpkg'
-        runVcpkgInstall: true
+
     - run: find
       shell: bash
 
