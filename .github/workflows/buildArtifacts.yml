@@ -117,12 +117,12 @@
       - name: clean java cache
         run: |
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
-          export proj_dir=pwd
           find
           mkdir ./example/java/build
         shell: bash
       - name: Compile Java ver
         run: |
+          export proj_dir=pwd
           cd ./example/java/build
           find $proj_dir -maxdepth 1 -iname "td*config.cmake"
           cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=$proj_dir/vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$proj_dir $proj_dir/example/java ../
