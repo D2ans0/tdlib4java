@@ -4,10 +4,34 @@ on:
   workflow_dispatch:
 
 env:
-  vcpkg_packages: "install gperf:x64-windows openssl:x64-windows zlib:x64-windows readline:x64-windows"
   java_ver: "8"
   php_ver: "7.4"
   cmake_ver: "3.16.x"
+  VCPKG_DEFAULT_TRIPLET: "x64"
+  vcpkg_packages: |
+    {
+      {
+      "name": "gperf",
+      "version-string": "3.1"
+      "platform": "windows"
+      }
+      {
+      "name": "openssl",
+      "version-string": "3.0"
+      "platform": "windows"
+      }
+      {
+      "name": "zlib",
+      "version-string": "1.2.3"
+      "platform": "windows"
+      }
+      {
+      "name": "readline",
+      "version-string": "5.0"
+      "platform": "windows"
+      }
+    }
+
 
 jobs:
   build:
@@ -22,6 +46,8 @@ jobs:
     - name: Test MSbuild
       run: msbuild -version
 
+    - name: Add vcpkg manifest
+      run: echo "${{ env.vcpkg_packages }}"
 
     - name: Setup vcpkg and install dependencies
       uses: lukka/run-vcpkg@v10
@@ -29,10 +55,9 @@ jobs:
       with:
         # This one is not needed, as it is the default value anyway.
         # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        #vcpkgJsonGlob: '**/cmakepresets/vcpkg.json'
+        cpkgJsonGlob: './vcpkg.json'
         vcpkgDirectory: '${{ github.workspace }}/td/vcpkg'
         runVcpkgInstall: true
-        runVcpkgFormatString: ${{ env.vcpkg_packages }}
 
 
     - uses: lukka/get-cmake@latest
