@@ -38,13 +38,17 @@ jobs:
     runs-on: Windows-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
 
-    - name: Setup Visual Studio
-      uses: microsoft/setup-msbuild@v1.1
-
+    - uses: microsoft/setup-msbuild@v1.1
     - name: Test MSbuild
       run: msbuild -version
+
+    - uses: lukka/get-cmake@latest
+    - name: Test Cmake
+      run: cmake --version
 
     - name: Add vcpkg manifest
       run: echo "${{ env.vcpkg_packages }}"
@@ -55,15 +59,11 @@ jobs:
       with:
         # This one is not needed, as it is the default value anyway.
         # vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        cpkgJsonGlob: './vcpkg.json'
-        vcpkgDirectory: '${{ github.workspace }}/td/vcpkg'
+        vcpkgJsonGlob: './vcpkg.json'
+        appendedCacheKey: vcpkginstall
+        # vcpkgDirectory: '${{ github.workspace }}/td/vcpkg'
         runVcpkgInstall: true
-
-
-    - uses: lukka/get-cmake@latest
-    - name: dir
-
-      run: find $RUNNER_WORKSPACE
+    - run: find
       shell: bash
 
 
@@ -86,14 +86,6 @@ jobs:
 
     - name: Test PHP
       run: "php -v"
-
-
-    - uses: jwlawson/actions-setup-cmake@v1.12
-      with:
-        cmake-version: ${{ env.cmake_ver }}
-
-    - name: Test Cmake
-      run: cmake --version
 
 
     - name: Compile td with JNI support
