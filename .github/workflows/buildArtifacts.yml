@@ -28,13 +28,13 @@ jobs:
       run: cmake --version
 
 
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v10
-        with:
-          vcpkgDirectory: C:/vcpkg
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v10
+      with:
+        vcpkgDirectory: C:/vcpkg
 
-      - name: Install dependencies from vcpkg
-        run: "C:/vcpkg/vcpkg.exe install ${{ vcpkg_packages }}"
+    - name: Install dependencies from vcpkg
+      run: "C:/vcpkg/vcpkg.exe install ${{ vcpkg_packages }}"
 
     - run: find
       shell: bash
