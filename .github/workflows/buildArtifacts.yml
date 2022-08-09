@@ -65,6 +65,14 @@
           cmake --build ../build --target install --config Release
           cd ..
 
+      - name: Archive main td artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: td
+          path: ./build
+
+
+
     build-java:
       runs-on: Windows-latest
       steps:
@@ -119,12 +127,6 @@
           cd ..
           find ../tdlib
         shell: bash
-
-      - name: Archive main td artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: td
-          path: ./build
 
       - name: Archive java artifact
         uses: actions/upload-artifact@v3
