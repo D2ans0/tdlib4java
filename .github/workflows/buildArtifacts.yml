@@ -1,6 +1,7 @@
 
 name: tdlib Main
 on:
+  push:
   workflow_dispatch:
 
 env:
@@ -8,29 +9,7 @@ env:
   php_ver: "7.4"
   cmake_ver: "3.16.x"
   VCPKG_DEFAULT_TRIPLET: "x64"
-  vcpkg_packages: |
-    {
-      {
-      "name": "gperf",
-      "version-string": "3.1",
-      "platform": "windows"
-      },
-      {
-      "name": "openssl",
-      "version-string": "3.0",
-      "platform": "windows"
-      },
-      {
-      "name": "zlib",
-      "version-string": "1.2.3",
-      "platform": "windows"
-      },
-      {
-      "name": "readline",
-      "version-string": "5.0",
-      "platform": "windows"
-      }
-    }
+  vcpkg_packages: '"openssl:x64-windows-static-release", "zlib:x64-windows-static-release", "gperf:x64-windows-static-release", "readline:x64-windows-static-release"'
 
 
 jobs:
@@ -48,18 +27,14 @@ jobs:
     - name: Test Cmake
       run: cmake --version
 
-    - name: Add vcpkg manifest
-      run: echo "${{ env.vcpkg_packages }}"
 
-    - name: Setup vcpkg and install dependencies
-      uses: lukka/run-vcpkg@v10
-      id: runvcpkg
-      with:
-        vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
-        runVcpkgInstall: true
-        vcpkgJsonGlob: './vcpkg.json'
-        appendedCacheKey: vcpkginstall
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgDirectory: C:/vcpkg
+
+      - name: Install dependencies from vcpkg
+        run: "C:/vcpkg/vcpkg.exe install ${{ vcpkg_packages }}"
 
     - run: find
       shell: bash
