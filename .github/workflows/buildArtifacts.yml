@@ -117,7 +117,7 @@
       - name: clean java cache
         run: |
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
-          proj_dir=pwd
+          export proj_dir=pwd
           find
           mkdir ./example/java/build
         shell: bash
