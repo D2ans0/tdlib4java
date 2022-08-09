@@ -77,8 +77,11 @@
           path: ./build
 
 
-  jobs:
     build-final:
+      runs-on: Windows-latest
+      steps:
+
+      - uses: actions/checkout@v3
 # Install dependencies
       - uses: microsoft/setup-msbuild@v1.1
       - name: Test MSbuild
