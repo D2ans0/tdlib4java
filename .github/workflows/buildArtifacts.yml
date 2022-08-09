@@ -72,6 +72,7 @@
           cd ./build
           cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=../example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake ..
           cmake --build ../build --target install --config Release
+          cd ..
 
       - name: clean java cache
         run: |
@@ -84,17 +85,18 @@
           cd ./example/java/build
           cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path ../example/java/td/lib/cmake/Td) ../example/java
           cmake --build ../example/java/build --target install --config Release
+          cd ..
           find ../tdlib
         shell: bash
 
       - name: Archive main td artifact
         uses: actions/upload-artifact@v3
         with:
-          name: code-coverage-report
+          name: td
           path: ./build
 
       - name: Archive java artifact
         uses: actions/upload-artifact@v3
         with:
-          name: code-coverage-report
+          name: tdJava
           path: ./example/java/build
