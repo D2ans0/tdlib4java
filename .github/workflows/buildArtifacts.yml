@@ -1,4 +1,5 @@
 
+
   name: tdlib Main
   on:
     push:
@@ -122,9 +123,10 @@
       - name: Compile Java ver
         run: |
           cd ./example/java/build
-          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../../vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path ../../../example/java/td/lib/cmake/Td) ../example/java
+          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../../../vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$($PWD/../../../example/java/td/lib/cmake/Td) ../example/java
           cmake --build ../build --target install --config Release
           cd ../../..
+        shell: bash
 
       - name: Archive java artifact
         uses: actions/upload-artifact@v3
