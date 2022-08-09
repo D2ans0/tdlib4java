@@ -31,7 +31,7 @@ jobs:
       uses: lukka/run-vcpkg@v10
       with:
         vcpkgGitCommitId: 'f93ba152d55e1d243160e690bc302ffe8638358e'
-        vcpkgDirectory: ${GITHUB_WORKSPACE}/vcpkg
+        vcpkgDirectory: ./vcpkg
 
     - name: Install dependencies from vcpkg
       run: "${GITHUB_WORKSPACE}/vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
