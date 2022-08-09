@@ -69,6 +69,7 @@
           ../
           cmake --build ./ --target install --config Release
           cd ..
+        shell: bash
 
       - name: Archive main td artifact
         uses: actions/upload-artifact@v3
