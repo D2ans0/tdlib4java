@@ -12,12 +12,13 @@
 
 
   jobs:
-    build:
+    build-td:
       runs-on: Windows-latest
       steps:
+
       - uses: actions/checkout@v3
 
-
+# Install dependencies
       - uses: microsoft/setup-msbuild@v1.1
       - name: Test MSbuild
         run: msbuild -version
@@ -26,40 +27,28 @@
       - name: Test Cmake
         run: cmake --version
 
-
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v10
         with:
           vcpkgGitCommitId: 'f93ba152d55e1d243160e690bc302ffe8638358e'
           vcpkgDirectory: ./vcpkg
-
       - name: Install dependencies from vcpkg
         run: "./vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
-
-      - run: find
-        shell: bash
-
 
       - name: Setup Java 8
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: ${{ env.java_ver }}
-
       - name: Test Java
         run: "java -version"
-
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.php_ver }}
-          # tools: pecl
-          # extensions: swoole
-
       - name: Test PHP
         run: "php -v"
-
 
       - name: clean cache
         run: |
@@ -67,6 +56,8 @@
           find
           mkdir build
         shell: bash
+
+# Compilation
       - name: Compile td with JNI support
         run: |
           cd ./build
@@ -74,6 +65,46 @@
           cmake --build ../build --target install --config Release
           cd ..
 
+    build-java:
+      runs-on: Windows-latest
+      steps:
+
+      - uses: actions/checkout@v3
+
+# Install dependencies
+      - uses: microsoft/setup-msbuild@v1.1
+      - name: Test MSbuild
+        run: msbuild -version
+
+      - uses: lukka/get-cmake@latest
+      - name: Test Cmake
+        run: cmake --version
+
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v10
+        with:
+          vcpkgGitCommitId: 'f93ba152d55e1d243160e690bc302ffe8638358e'
+          vcpkgDirectory: ./vcpkg
+      - name: Install dependencies from vcpkg
+        run: "./vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
+
+      - name: Setup Java 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.java_ver }}
+      - name: Test Java
+        run: "java -version"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php_ver }}
+      - name: Test PHP
+        run: "php -v"
+
+
+# Compilation
       - name: clean java cache
         run: |
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
