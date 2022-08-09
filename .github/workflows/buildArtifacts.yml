@@ -34,7 +34,7 @@
           vcpkgDirectory: ./vcpkg
 
       - name: Install dependencies from vcpkg
-        run: "${{ GITHUB_WORKSPACE }}/vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
+        run: "./vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
 
       - run: find
         shell: bash
@@ -69,32 +69,32 @@
         shell: bash
       - name: Compile td with JNI support
         run: |
-          cd ${{ GITHUB_WORKSPACE }}/build
-          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=${{ GITHUB_WORKSPACE }}/example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${{ GITHUB_WORKSPACE }}/vcpkg/scripts/buildsystems/vcpkg.cmake ${{ GITHUB_WORKSPACE }}
-          cmake --build ${{ GITHUB_WORKSPACE }}/build --target install --config Release
+          cd ./build
+          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=../example/java/td -DTD_ENABLE_JNI=ON -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake ..
+          cmake --build ../build --target install --config Release
 
       - name: clean java cache
         run: |
-          rm -rf ${{ GITHUB_WORKSPACE }}/example/java/build ${{ GITHUB_WORKSPACE }}/example/java/CMakeFiles ${{ GITHUB_WORKSPACE }}/example/java/CMakeCache.txt
+          rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
           find
-          mkdir ${{ GITHUB_WORKSPACE }}/example/java/build
+          mkdir ./example/java/build
         shell: bash
       - name: Compile Java ver
         run: |
-          cd ${{ GITHUB_WORKSPACE }}/example/java/build
-          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=${{ GITHUB_WORKSPACE }}/vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path ${{ GITHUB_WORKSPACE }}/example/java/td/lib/cmake/Td) ${{ GITHUB_WORKSPACE }}/example/java
-          cmake --build ${{ GITHUB_WORKSPACE }}/example/java/build --target install --config Release
-          find ${{ GITHUB_WORKSPACE }}/tdlib
+          cd ./example/java/build
+          cmake -A x64 -DCMAKE_INSTALL_PREFIX:PATH=tdlib -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake -DTd_DIR:PATH=$(Resolve-Path ../example/java/td/lib/cmake/Td) ../example/java
+          cmake --build ../example/java/build --target install --config Release
+          find ../tdlib
         shell: bash
 
       - name: Archive main td artifact
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: ${{ GITHUB_WORKSPACE }}/build
+          path: ./build
 
       - name: Archive java artifact
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: ${{ GITHUB_WORKSPACE }}/example/java/build
+          path: ./example/java/build
