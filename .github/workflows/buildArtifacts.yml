@@ -30,11 +30,11 @@ jobs:
     - name: Setup vcpkg
       uses: lukka/run-vcpkg@v10
       with:
-        vcpkgGitCommitId: '5568f110b509a9fd90711978a7cb76bae75bb092'
-        vcpkgDirectory: C:/vcpkg
+        vcpkgGitCommitId: 'f93ba152d55e1d243160e690bc302ffe8638358e'
+        vcpkgDirectory: ./vcpkg
 
     - name: Install dependencies from vcpkg
-      run: "C:/vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }}"
+      run: "./vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }}"
 
     - run: find
       shell: bash
