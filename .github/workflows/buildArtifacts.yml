@@ -119,6 +119,8 @@
       - name: set prev run number
         run: echo ::set-env name=td_run_num::$(( ${{ env.run }}_num-1 ))
         shell: bash
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 
       - name: Download TD artifact from previous build
         uses: dawidd6/action-download-artifact@v2
