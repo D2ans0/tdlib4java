@@ -64,10 +64,8 @@
           cmake -A x64 \
           -DCMAKE_INSTALL_PREFIX:PATH=../example/java/td \
           -DTD_ENABLE_JNI=ON \
-          -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake \
-          ../
+          -DCMAKE_TOOLCHAIN_FILE:FILEPATH=../vcpkg/scripts/buildsystems/vcpkg.cmake ../
           cmake --build ./ --target install --config Release
-          cd ..
         shell: bash
 
       - name: Archive main td artifact
@@ -75,62 +73,6 @@
         with:
           name: build
           path: ./build
-
-
-    build-final:
-      runs-on: Windows-latest
-      # needs: build-td
-
-      steps:
-
-      - uses: actions/checkout@v3
-# Install dependencies
-      - uses: microsoft/setup-msbuild@v1.1
-      - name: Test MSbuild
-        run: msbuild -version
-
-      - uses: lukka/get-cmake@latest
-      - name: Test Cmake
-        run: cmake --version
-
-      - name: Setup vcpkg
-        uses: lukka/run-vcpkg@v10
-        with:
-          vcpkgGitCommitId: 'f93ba152d55e1d243160e690bc302ffe8638358e'
-          vcpkgDirectory: ./vcpkg
-      - name: Install dependencies from vcpkg
-        run: "./vcpkg/vcpkg.exe install ${{ env.vcpkg_packages }} --clean-after-build"
-
-      - name: Setup Java 8
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: ${{ env.java_ver }}
-      - name: Test Java
-        run: "java -version"
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.php_ver }}
-      - name: Test PHP
-        run: "php -v"
-      
-      - name: set prev run number
-        run: echo ::set-env name=td_run_num::$(( ${{ env.run }}_num-1 ))
-        shell: bash
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
-
-      - name: Download TD artifact from previous build
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          workflow_conclusion: ""
-          name: "build"
-          path: "./"
-          search_artifacts: true
-          # run_number: ${{ env.td_run_num }}
-          run_number: "50"
 
 
 # Compilation
