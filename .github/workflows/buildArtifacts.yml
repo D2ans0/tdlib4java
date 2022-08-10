@@ -8,6 +8,7 @@
     php_ver: "7.4"
     cmake_ver: "3.16.x"
     vcpkg_packages: "openssl zlib gperf readline --triplet x64-windows"
+    run_num: "0"
 
 
   jobs:
@@ -116,7 +117,7 @@
         run: "php -v"
       
       - name: set prev run number
-        run: echo ::set-env name=td_run_num::$((github.run_number-1))
+        run: echo ::set-env name=td_run_num::$(( env.run_num-1 ))
         shell: bash
 
       - name: Download TD artifact from previous build
