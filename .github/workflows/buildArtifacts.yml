@@ -74,7 +74,7 @@
       - name: Archive main td artifact
         uses: actions/upload-artifact@v3
         with:
-          # name: td
+          name: build
           path: ./build
 
 
@@ -119,7 +119,8 @@
 
       - uses: actions/download-artifact@v3
         with:
-          path: ./build
+          name: build
+          path: ./
 
       - name: print filepath
         run: find
@@ -128,7 +129,7 @@
 # Compilation
       - name: clean java cache
         run: |
-          ls -l ./build
+          ls -l ./
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
           mkdir ./example/java/build
         shell: bash
@@ -141,12 +142,12 @@
         run: |
           export proj_dir=$(pwd)
           export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
-          export tdtargetfile=$(find ./ -name "TdTargets.cmake")
+          export tdtargetfile=$(find $proj_dir -name "TdTargets.cmake")
           cp $tdconfigfile{,.bkp}
           awk -v var="$tdtargetfile" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
 
 
-          cd ./example/java/build
+          cd $proj_dir/example/java/build
           cat ${tdconfigfile}
           cat ${tdtargetfile}
 
