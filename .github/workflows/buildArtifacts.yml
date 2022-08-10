@@ -119,14 +119,22 @@
         with:
           path: ./build
 
+      - name: print filepath
+        run: find
+        shell: bash
+
 # Compilation
       - name: clean java cache
         run: |
           ls -l ./build
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
-          find
           mkdir ./example/java/build
         shell: bash
+
+      - name: print filepath
+        run: find
+        shell: bash
+
       - name: Compile Java ver
         run: |
           export proj_dir=$(pwd)
