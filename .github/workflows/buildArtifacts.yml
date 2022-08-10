@@ -172,11 +172,14 @@
           -DCMAKE_TOOLCHAIN_FILE:FILEPATH=$proj_dir/vcpkg/scripts/buildsystems/vcpkg.cmake \
           -DTd_DIR:PATH=$proj_dir $proj_dir/example/java \
           ../
+        shell: bash
 
+      - name: Install Java ver
+        run: |
+          export proj_dir=$PWD
           cmake --build $proj_dir/example/java/build \
           --target install \
           --config Release
-          cd $proj_dir
         shell: bash
         
       - name: print out logs
