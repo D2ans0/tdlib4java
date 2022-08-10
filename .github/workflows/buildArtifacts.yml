@@ -190,6 +190,7 @@
         shell: bash
 
       - name: Archive java artifact
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v3
         with:
           name: tdJava
