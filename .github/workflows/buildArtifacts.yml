@@ -1,5 +1,3 @@
-
-
   name: tdlib Main
   on:
     push:
@@ -10,7 +8,6 @@
     php_ver: "7.4"
     cmake_ver: "3.16.x"
     vcpkg_packages: "openssl zlib gperf readline --triplet x64-windows"
-    td_run_num: "0"
 
 
   jobs:
@@ -123,7 +120,7 @@
       - name: Download TD artifact from previous build
         uses: dawidd6/action-download-artifact@v2
         with:
-          run_number: ${{ td_run_num }}
+          run_number: ${{ env.td_run_num }}
 
       # - uses: actions/download-artifact@v3
       #   with:
