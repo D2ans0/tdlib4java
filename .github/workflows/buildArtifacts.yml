@@ -140,9 +140,9 @@
 
       - name: Compile Java ver
         run: |
-          export proj_dir=$(pwd)
+          export proj_dir=$PWD
           export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
-          export tdtargetfile=$(find $proj_dir -name "TdTargets.cmake")
+          export tdtargetfile=$(powershell 'Get-ChildItem ./ -Filter TdTargets.cmake -Recurse | % { $_.FullName }')
           cp $tdconfigfile{,.bkp}
           awk -v var="$tdtargetfile" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
 
