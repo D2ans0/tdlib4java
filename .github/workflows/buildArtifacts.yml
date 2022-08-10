@@ -10,7 +10,7 @@
     php_ver: "7.4"
     cmake_ver: "3.16.x"
     vcpkg_packages: "openssl zlib gperf readline --triplet x64-windows"
-    run_num: ${{ github.run_number }}
+    td_run_num: "0"
 
 
   jobs:
@@ -117,12 +117,13 @@
           php-version: ${{ env.php_ver }}
       - name: Test PHP
         run: "php -v"
+        
+      - run: echo ::set-env name=td_run_num::$((github.run_number-1))
 
-      - run: echo ::set-env name=run_num_offset::$((run_num-1))
       - name: Download TD artifact from previous build
         uses: dawidd6/action-download-artifact@v2
         with:
-          run_number: ${{ run_num_offset }}
+          run_number: ${{ td_run_num }}
 
       # - uses: actions/download-artifact@v3
       #   with:
