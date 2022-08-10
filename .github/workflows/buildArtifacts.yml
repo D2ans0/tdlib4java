@@ -114,8 +114,10 @@
           php-version: ${{ env.php_ver }}
       - name: Test PHP
         run: "php -v"
-        
-      - run: echo ::set-env name=td_run_num::$((github.run_number-1))
+      
+      - name: set prev run number
+        run: echo ::set-env name=td_run_num::$((github.run_number-1))
+        shell: bash
 
       - name: Download TD artifact from previous build
         uses: dawidd6/action-download-artifact@v2
