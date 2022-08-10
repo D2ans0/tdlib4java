@@ -10,6 +10,7 @@
     php_ver: "7.4"
     cmake_ver: "3.16.x"
     vcpkg_packages: "openssl zlib gperf readline --triplet x64-windows"
+    run_num: ${{ github.run_number }}
 
 
   jobs:
@@ -80,7 +81,7 @@
 
     build-final:
       runs-on: Windows-latest
-      needs: build-td
+      # needs: build-td
 
       steps:
 
@@ -117,10 +118,16 @@
       - name: Test PHP
         run: "php -v"
 
-      - uses: actions/download-artifact@v3
+      - run: echo ::set-env name=run_num_offset::$((run_num-1))
+      - name: Download TD artifact from previous build
+        uses: dawidd6/action-download-artifact@v2
         with:
-          name: build
-          path: ./
+          run_number: ${{ run_num_offset }}
+
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: build
+      #     path: ./
 
       - name: print filepath
         run: find
@@ -144,7 +151,7 @@
           export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
           export tdtargetfile=$(powershell 'Get-ChildItem ./ -Filter TdTargets.cmake -Recurse | % { $_.FullName }')
           cp $tdconfigfile{,.bkp}
-          awk -v var="$tdtargetfile" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
+          awk -v var="${tdtargetfile//\\//}" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
 
 
           cd $proj_dir/example/java/build
