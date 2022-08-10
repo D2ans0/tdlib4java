@@ -117,7 +117,7 @@
         run: "php -v"
       
       - name: set prev run number
-        run: echo ::set-env name=td_run_num::$(( env.run_num-1 ))
+        run: echo ::set-env name=td_run_num::$(( ${{ env.run }}_num-1 ))
         shell: bash
 
       - name: Download TD artifact from previous build
