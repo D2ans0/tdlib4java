@@ -185,6 +185,7 @@
           find ./ -name "CMakeFiles/CMakeOutput.log"
           log=$(find ./ -name "CMakeFiles/CMakeOutput.log")
           cat $log
+          pwd
         shell: bash
 
       - name: Archive java artifact
