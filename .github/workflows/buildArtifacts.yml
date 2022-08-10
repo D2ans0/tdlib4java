@@ -178,6 +178,12 @@
           --config Release
           cd $proj_dir
         shell: bash
+        
+      - name: print out logs
+        if: ${{ failure() }}
+        run: |
+          cat $(find ./ -name: CMakeFiles/CMakeOutput.log)
+        shell: bash
 
       - name: Archive java artifact
         uses: actions/upload-artifact@v3
