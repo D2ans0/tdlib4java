@@ -89,7 +89,7 @@
           export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
           export tdtargetfile=$(powershell 'Get-ChildItem ./ -Filter TdTargets.cmake -Recurse | % { $_.FullName }')
           cp $tdconfigfile{,.bkp}
-          awk 'NR==3 { $0="" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
+          awk -v var="${tdtargetfile//\\//}" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
 
 
           cd $proj_dir/example/java/build
