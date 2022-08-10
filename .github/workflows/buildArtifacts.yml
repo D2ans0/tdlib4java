@@ -130,11 +130,16 @@
       - name: Compile Java ver
         run: |
           export proj_dir=$(pwd)
+          export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
+          export tdtargetfile=$(find ./ -name "TdTargets.cmake")
+          cp $tdconfigfile{,.bkp}
+          awk -v var="$tdtargetfile" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
+
 
           cd ./example/java/build
-          cat $(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
-          sed -i "s/*TdTargets.cmake*/include(\"$(find ~/ -name \"/Targets.cmake\")\")/" $(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
-          cat $(find $proj_dir -iname "tdtargets.cmake")
+          cat ${tdconfigfile}
+          cat ${tdtargetfile}
+
           cmake -A x64 \
           -DCMAKE_INSTALL_PREFIX:PATH=tdlib \
           -DCMAKE_CURRENT_LIST_DIR:PATH=./build/CMakeFiles/Export/lib/cmake/Td/ \
