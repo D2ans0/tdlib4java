@@ -80,6 +80,8 @@
 
     build-final:
       runs-on: Windows-latest
+      needs: build-td
+
       steps:
 
       - uses: actions/checkout@v3
