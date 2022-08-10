@@ -132,14 +132,6 @@
           # run_number: ${{ env.td_run_num }}
           run_number: "50"
 
-      # - uses: actions/download-artifact@v3
-      #   with:
-      #     name: build
-      #     path: ./
-
-      - name: print filepath
-        run: find
-        shell: bash
 
 # Compilation
       - name: clean java cache
@@ -149,17 +141,13 @@
           mkdir ./example/java/build
         shell: bash
 
-      - name: print filepath
-        run: find
-        shell: bash
-
       - name: Compile Java ver
         run: |
           export proj_dir=$PWD
           export tdconfigfile=$(find $proj_dir -maxdepth 1 -iname "td*config.cmake")
           export tdtargetfile=$(powershell 'Get-ChildItem ./ -Filter TdTargets.cmake -Recurse | % { $_.FullName }')
           cp $tdconfigfile{,.bkp}
-          awk -v var="${tdtargetfile//\\//}" 'NR==3 { $0="include("var")" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
+          awk 'NR==3 { $0="" } { print }' ${tdconfigfile}.bkp > ${tdconfigfile}
 
 
           cd $proj_dir/example/java/build
