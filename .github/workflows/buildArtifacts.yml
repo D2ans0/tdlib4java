@@ -122,7 +122,7 @@
 # Compilation
       - name: clean java cache
         run: |
-          ls -l ../build
+          ls -l ./build
           rm -rf ./example/java/build ./example/java/CMakeFiles ./example/java/CMakeCache.txt
           find
           mkdir ./example/java/build
