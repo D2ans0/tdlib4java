@@ -186,6 +186,7 @@
           log=$(find ./ -name "CMakeFiles/CMakeOutput.log")
           cat $log
           pwd
+          cat D:/a/tdlib4java/tdlib4java/example/java/build/CMakeFiles/CMakeOutput.log
         shell: bash
 
       - name: Archive java artifact
