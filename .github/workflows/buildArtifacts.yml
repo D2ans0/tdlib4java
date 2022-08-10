@@ -182,7 +182,7 @@
       - name: print out logs
         if: ${{ failure() }}
         run: |
-          cat $(find ./ -name: CMakeFiles/CMakeOutput.log)
+          cat $(find ./ -name "CMakeFiles/CMakeOutput.log")
         shell: bash
 
       - name: Archive java artifact
